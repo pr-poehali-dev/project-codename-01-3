@@ -1,251 +1,258 @@
+import { useState } from "react"
+import { motion } from "framer-motion"
 import HeroSection from "@/components/HeroSection"
 import { TextGradientScroll } from "@/components/ui/text-gradient-scroll"
+import { Timeline } from "@/components/ui/timeline"
 import { StaggerTestimonials } from "@/components/ui/stagger-testimonials"
-import { motion } from "framer-motion"
 import SmoothScrollHero from "@/components/ui/smooth-scroll-hero"
 import BookingModal from "@/components/BookingModal"
+import EditableText from "@/components/EditableText"
+import EditableImage from "@/components/EditableImage"
+import { useEditMode } from "@/hooks/useEditMode"
 import Icon from "@/components/ui/icon"
-import { useState } from "react"
 
-const halls = [
-  {
-    id: 1,
-    name: "Красный Бархат",
-    capacity: "до 10 чел",
-    features: ["Проектор 4K", "Акустика Bose", "Мини-бар"],
-    icon: "Film",
-    color: "from-[hsl(345,65%,30%)] to-[hsl(345,70%,18%)]",
-  },
-  {
-    id: 2,
-    name: "Noir Lounge",
-    capacity: "до 8 чел",
-    features: ["Экран 120″", "Световое шоу", "Диванные зоны"],
-    icon: "Tv",
-    color: "from-[hsl(270,40%,25%)] to-[hsl(270,50%,15%)]",
-  },
-  {
-    id: 3,
-    name: "Кабаре",
-    capacity: "до 15 чел",
-    features: ["Сцена", "Микрофоны", "Диско-шар"],
-    icon: "Mic",
-    color: "from-[hsl(345,65%,30%)] to-[hsl(20,60%,20%)]",
-  },
-  {
-    id: 4,
-    name: "Джаз",
-    capacity: "до 6 чел",
-    features: ["Hi-Fi звук", "Уют", "Живые цветы"],
-    icon: "Music",
-    color: "from-[hsl(38,60%,30%)] to-[hsl(38,70%,18%)]",
-  },
-  {
-    id: 5,
-    name: "Голливуд",
-    capacity: "до 20 чел",
-    features: ["IMAX-экран", "Dolby Atmos", "Кресла-реклайнеры"],
-    icon: "Star",
-    color: "from-[hsl(345,55%,28%)] to-[hsl(345,65%,16%)]",
-  },
-  {
-    id: 6,
-    name: "Арт-Хаус",
-    capacity: "до 12 чел",
-    features: ["Дизайнерский интерьер", "Проектор", "Арт-объекты"],
-    icon: "Palette",
-    color: "from-[hsl(200,40%,22%)] to-[hsl(200,50%,14%)]",
-  },
-  {
-    id: 7,
-    name: "Vintage",
-    capacity: "до 8 чел",
-    features: ["Ретро-атмосфера", "Винный бар", "Камин"],
-    icon: "Wine",
-    color: "from-[hsl(345,70%,32%)] to-[hsl(345,75%,18%)]",
-  },
-  {
-    id: 8,
-    name: "VIP Suite",
-    capacity: "до 6 чел",
-    features: ["Приватность", "Персональный бармен", "Звёздный потолок"],
-    icon: "Crown",
-    color: "from-[hsl(38,75%,35%)] to-[hsl(38,80%,20%)]",
-  },
-]
+const defaultData = {
+  missionLabel: "Наша история",
+  missionTitle: "О НАС",
+  missionText:
+    "В LOFT CINEMA & KARAOKE мы создаём пространство, где каждый вечер становится особенным. Забудьте об обычных развлечениях — здесь кирпичные стены, бархат и приглушённый свет встречаются с мощным звуком и большим экраном. Восемь уникальных залов, каждый со своим характером, ждут вас — будь то романтический вечер, шумная вечеринка или корпоратив в стиле голливудского кино. Живая музыка, безупречный звук, изысканные напитки. Это не просто развлечение — это ваша история.",
+
+  timelineLabel: "Выбирайте своё настроение",
+  timelineTitle: "8 ЗАЛОВ",
+  timelineSubtitle: "Каждый зал — отдельная вселенная. Найдите свою атмосферу.",
+  timelineEntries: [
+    {
+      id: 1,
+      image: "https://images.unsplash.com/photo-1598387993441-a364f854c3e1?w=800&q=80",
+      alt: "Зал Красный Бархат",
+      title: "Красный Бархат & Noir Lounge",
+      description:
+        "Два зала для тех, кто ценит атмосферу. «Красный Бархат» вмещает до 10 гостей: проектор 4K, акустика Bose, мини-бар. «Noir Lounge» — экран 120″, световое шоу и диванные зоны для 8 человек. Идеально для романтики и дружеских вечеров.",
+      layout: "left" as const,
+    },
+    {
+      id: 2,
+      image: "https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=800&q=80",
+      alt: "Зал Кабаре",
+      title: "Кабаре & Джаз",
+      description:
+        "«Кабаре» — настоящая сцена для ваших выступлений: микрофоны, диско-шар, до 15 гостей. «Джаз» — камерный зал для 6 персон с Hi-Fi звуком и живыми цветами. Здесь рождаются лучшие воспоминания вашей жизни.",
+      layout: "right" as const,
+    },
+    {
+      id: 3,
+      image: "https://images.unsplash.com/photo-1574169208507-84376144848b?w=800&q=80",
+      alt: "VIP залы",
+      title: "Голливуд, Арт-Хаус, Vintage & VIP Suite",
+      description:
+        "«Голливуд» — IMAX-экран, Dolby Atmos, кресла-реклайнеры, до 20 гостей. «Арт-Хаус» — дизайнерский интерьер с арт-объектами. «Vintage» — камин, вино, ретро-атмосфера. VIP Suite — звёздный потолок и персональный бармен для особых событий.",
+      layout: "left" as const,
+    },
+  ],
+
+  testimonialsLabel: "Мнения гостей",
+  testimonialsTitle: "Что говорят наши",
+  testimonialsHighlight: "ГОСТИ",
+  testimonialsSubtitle: "Реальные отзывы людей, которые уже провели с нами незабываемый вечер.",
+
+  ctaImage: "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=1920&q=80",
+  ctaImageMobile: "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=1080&q=80",
+}
 
 export default function Index() {
-  const [bookingHall, setBookingHall] = useState<string | undefined>(undefined)
+  const { isEditMode } = useEditMode()
+  const [data, setData] = useState(defaultData)
   const [isBookingOpen, setIsBookingOpen] = useState(false)
 
-  const openBooking = (hallName?: string) => {
-    setBookingHall(hallName)
-    setIsBookingOpen(true)
-  }
+  const set = (key: keyof typeof defaultData) => (val: string) =>
+    setData((prev) => ({ ...prev, [key]: val }))
 
-  const missionStatement =
-    "В LOFT CINEMA & KARAOKE мы создаём пространство, где каждый вечер становится особенным. Забудьте об обычных развлечениях — здесь сырцовые кирпичные стены, бархат и приглушённый свет встречаются с мощным звуком и большим экраном. Восемь уникальных залов, каждый со своим характером, ждут вас — будь то романтический вечер, шумная вечеринка или корпоратив в стиле голливудского кино. Живая музыка, безупречный звук, изысканные напитки. Это не просто развлечение — это ваша история."
+  const setEntry = (idx: number, field: "title" | "description" | "image") => (val: string) =>
+    setData((prev) => ({
+      ...prev,
+      timelineEntries: prev.timelineEntries.map((e, i) =>
+        i === idx ? { ...e, [field]: val } : e
+      ),
+    }))
 
   return (
     <div className="min-h-screen" style={{ background: "hsl(var(--dark-bg))" }}>
-      {/* Hero */}
       <HeroSection />
 
-      {/* Mission */}
-      <section id="mission" className="relative min-h-screen flex items-center justify-center py-24 overflow-hidden">
-        <div className="absolute inset-0 bg-grid-subtle opacity-40 pointer-events-none" />
+      {/* ── MISSION ── */}
+      <section id="mission" className="relative min-h-screen flex items-center justify-center py-20 overflow-hidden">
+        <div className="absolute inset-0 bg-grid-subtle opacity-30 pointer-events-none" />
         <div className="absolute inset-0 loft-texture pointer-events-none" />
+
         <div className="container mx-auto px-6 relative z-10">
           <div className="max-w-4xl mx-auto text-center">
-            <motion.p
-              className="text-[hsl(345,65%,55%)] text-xs font-semibold tracking-[0.4em] uppercase mb-4"
-              initial={{ opacity: 0, y: 10 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-            >
-              Наша история
-            </motion.p>
-            <h2
-              className="text-4xl md:text-6xl font-black tracking-wider mb-12 text-wine-gradient"
-              style={{ fontFamily: "var(--font-serif)" }}
-            >
-              О НАС
-            </h2>
-            <TextGradientScroll
-              text={missionStatement}
-              className="text-xl md:text-2xl lg:text-3xl font-medium leading-relaxed text-white/80"
-              type="word"
-              textOpacity="soft"
+            <EditableText
+              as="p"
+              value={data.missionLabel}
+              onChange={set("missionLabel")}
+              className="text-[hsl(345,65%,55%)] text-xs font-semibold tracking-[0.4em] uppercase mb-4 block"
             />
-          </div>
-        </div>
-      </section>
-
-      {/* Halls Section */}
-      <section id="halls" className="relative py-24 overflow-hidden">
-        <div className="absolute inset-0 bg-grid-subtle opacity-30 pointer-events-none" />
-        <div className="container mx-auto px-6 relative z-10">
-          <div className="text-center mb-16">
-            <motion.p
-              className="text-[hsl(345,65%,55%)] text-xs font-semibold tracking-[0.4em] uppercase mb-3"
-              initial={{ opacity: 0, y: 10 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-            >
-              Выбирайте своё настроение
-            </motion.p>
-            <h2
-              className="text-4xl md:text-6xl font-black tracking-wider text-white"
+            <EditableText
+              as="h2"
+              value={data.missionTitle}
+              onChange={set("missionTitle")}
+              className="text-4xl md:text-6xl font-black tracking-wider mb-12 text-wine-gradient block"
               style={{ fontFamily: "var(--font-serif)" }}
-            >
-              8 <span className="text-wine-gradient">ЗАЛОВ</span>
-            </h2>
-            <p className="text-white/50 text-lg mt-4 max-w-2xl mx-auto">
-              Каждый зал — отдельная вселенная. Найдите свою атмосферу.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-            {halls.map((hall, i) => (
-              <motion.div
-                key={hall.id}
-                className="group relative rounded-sm overflow-hidden cursor-pointer"
-                style={{ border: "1px solid hsl(345,20%,18%)" }}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.07 }}
-                whileHover={{ y: -4 }}
-              >
-                <div className={`absolute inset-0 bg-gradient-to-br ${hall.color} opacity-80`} />
-                <div className="absolute inset-0 bg-black/30 group-hover:bg-black/10 transition-all duration-300" />
-
-                <div className="relative z-10 p-6 flex flex-col h-full min-h-[240px]">
-                  <div className="flex items-center justify-between mb-auto">
-                    <span className="text-white/40 text-xs font-semibold tracking-widest uppercase">
-                      Зал {hall.id}
-                    </span>
-                    <div className="w-10 h-10 rounded-full bg-white/10 backdrop-blur-sm flex items-center justify-center">
-                      <Icon name={hall.icon as Parameters<typeof Icon>[0]["name"]} size={18} className="text-white" fallback="Star" />
-                    </div>
-                  </div>
-
-                  <div className="mt-6">
-                    <h3
-                      className="text-white text-xl font-bold mb-1"
-                      style={{ fontFamily: "var(--font-serif)" }}
-                    >
-                      {hall.name}
-                    </h3>
-                    <p className="text-white/50 text-sm mb-4">{hall.capacity}</p>
-                    <ul className="space-y-1 mb-6">
-                      {hall.features.map((f) => (
-                        <li key={f} className="flex items-center gap-2 text-white/70 text-xs">
-                          <span className="w-1 h-1 rounded-full bg-[hsl(345,65%,55%)]" />
-                          {f}
-                        </li>
-                      ))}
-                    </ul>
-                    <button
-                      onClick={() => openBooking(hall.name)}
-                      className="w-full py-2.5 text-xs font-bold tracking-widest uppercase text-white rounded-sm transition-all duration-300"
-                      style={{
-                        background: "hsl(345,60%,30% / 0.6)",
-                        border: "1px solid hsl(345,60%,45% / 0.4)"
-                      }}
-                    >
-                      Забронировать
-                    </button>
-                  </div>
-                </div>
-              </motion.div>
-            ))}
+            />
+            {isEditMode ? (
+              <EditableText
+                as="p"
+                value={data.missionText}
+                onChange={set("missionText")}
+                className="text-2xl md:text-3xl font-medium leading-relaxed text-white/80 block"
+              />
+            ) : (
+              <TextGradientScroll
+                text={data.missionText}
+                className="text-2xl md:text-3xl lg:text-4xl font-medium leading-relaxed text-white/80"
+                type="word"
+                textOpacity="soft"
+              />
+            )}
           </div>
         </div>
       </section>
 
-      {/* Testimonials */}
-      <section id="testimonials" className="relative py-24 overflow-hidden">
+      {/* ── TIMELINE / HALLS ── */}
+      <section id="community" className="relative py-20 overflow-hidden">
         <div className="absolute inset-0 bg-grid-subtle opacity-30 pointer-events-none" />
+
+        <div className="relative z-10">
+          <div className="container mx-auto px-6 mb-16">
+            <div className="text-center">
+              <EditableText
+                as="p"
+                value={data.timelineLabel}
+                onChange={set("timelineLabel")}
+                className="text-[hsl(345,65%,55%)] text-xs font-semibold tracking-[0.4em] uppercase mb-3 block"
+              />
+              <EditableText
+                as="h2"
+                value={data.timelineTitle}
+                onChange={set("timelineTitle")}
+                className="text-4xl md:text-6xl font-black tracking-wider mb-6 text-wine-gradient block"
+                style={{ fontFamily: "var(--font-serif)" }}
+              />
+              <EditableText
+                as="p"
+                value={data.timelineSubtitle}
+                onChange={set("timelineSubtitle")}
+                className="text-xl md:text-2xl text-white/50 max-w-3xl mx-auto block"
+              />
+            </div>
+          </div>
+
+          <Timeline
+            entries={data.timelineEntries.map((entry, i) =>
+              isEditMode
+                ? {
+                    ...entry,
+                    title: (
+                      <EditableText
+                        as="span"
+                        value={entry.title}
+                        onChange={setEntry(i, "title")}
+                        className="text-white"
+                      />
+                    ) as unknown as string,
+                    description: (
+                      <EditableText
+                        as="span"
+                        value={entry.description}
+                        onChange={setEntry(i, "description")}
+                        className="text-white/80"
+                      />
+                    ) as unknown as string,
+                  }
+                : entry
+            )}
+          />
+        </div>
+      </section>
+
+      {/* ── TESTIMONIALS ── */}
+      <section id="testimonials" className="relative py-20 overflow-hidden">
+        <div className="absolute inset-0 bg-grid-subtle opacity-30 pointer-events-none" />
+
         <div className="container mx-auto px-6 relative z-10">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
+            transition={{ duration: 0.8, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
             viewport={{ once: true }}
             className="text-center mb-16"
           >
-            <p className="text-[hsl(345,65%,55%)] text-xs font-semibold tracking-[0.4em] uppercase mb-3">
-              Мнения гостей
-            </p>
+            <EditableText
+              as="p"
+              value={data.testimonialsLabel}
+              onChange={set("testimonialsLabel")}
+              className="text-[hsl(345,65%,55%)] text-xs font-semibold tracking-[0.4em] uppercase mb-3 block"
+            />
             <h2
-              className="text-4xl md:text-6xl font-black tracking-wider text-white mb-4"
+              className="text-4xl md:text-6xl font-black tracking-wider mb-6"
               style={{ fontFamily: "var(--font-serif)" }}
             >
-              Что говорят наши{" "}
-              <span className="text-wine-gradient">ГОСТИ</span>
+              <EditableText
+                as="span"
+                value={data.testimonialsTitle}
+                onChange={set("testimonialsTitle")}
+                className="text-white"
+              />{" "}
+              <EditableText
+                as="span"
+                value={data.testimonialsHighlight}
+                onChange={set("testimonialsHighlight")}
+                className="text-wine-gradient"
+              />
             </h2>
-            <p className="text-white/50 text-lg max-w-2xl mx-auto">
-              Реальные отзывы людей, которые уже провели с нами незабываемый вечер.
-            </p>
+            <EditableText
+              as="p"
+              value={data.testimonialsSubtitle}
+              onChange={set("testimonialsSubtitle")}
+              className="text-xl md:text-2xl text-white/50 max-w-3xl mx-auto leading-relaxed block"
+            />
           </motion.div>
+
           <StaggerTestimonials />
         </div>
       </section>
 
-      {/* CTA Parallax */}
-      <section id="booking" className="relative">
-        <SmoothScrollHero
-          scrollHeight={2200}
-          desktopImage="https://images.unsplash.com/photo-1574169208507-84376144848b?w=1920&q=80"
-          mobileImage="https://images.unsplash.com/photo-1574169208507-84376144848b?w=1200&q=80"
-          initialClipPercentage={30}
-          finalClipPercentage={70}
-        />
+      {/* ── CTA PARALLAX ── */}
+      <section id="join" className="relative">
+        {isEditMode ? (
+          <div className="relative h-64 overflow-hidden">
+            <EditableImage
+              src={data.ctaImage}
+              alt="Фоновое фото финальной секции"
+              onChange={set("ctaImage")}
+              className="w-full h-full object-cover"
+              style={{ height: "256px" }}
+            />
+            <div className="absolute inset-0 flex items-center justify-center bg-black/50">
+              <p className="text-white/60 text-sm font-semibold">Нажмите на фото чтобы сменить</p>
+            </div>
+          </div>
+        ) : (
+          <SmoothScrollHero
+            scrollHeight={2500}
+            desktopImage={data.ctaImage}
+            mobileImage={data.ctaImageMobile}
+            initialClipPercentage={30}
+            finalClipPercentage={70}
+          />
+        )}
       </section>
 
-      {/* Footer */}
-      <footer className="relative py-12 border-t" style={{ borderColor: "hsl(345,20%,15%)", background: "hsl(0,0%,4%)" }}>
+      {/* ── FOOTER ── */}
+      <footer
+        className="relative py-12"
+        style={{ borderTop: "1px solid hsl(345,20%,15%)", background: "hsl(0,0%,4%)" }}
+      >
         <div className="container mx-auto px-6">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-10 mb-10">
             <div>
@@ -253,12 +260,17 @@ export default function Index() {
                 <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[hsl(345,65%,42%)] to-[hsl(345,70%,25%)] flex items-center justify-center">
                   <Icon name="Wine" size={15} className="text-white" />
                 </div>
-                <span className="text-white font-bold text-lg tracking-widest" style={{ fontFamily: "var(--font-serif)" }}>
+                <span
+                  className="text-white font-bold text-lg tracking-widest"
+                  style={{ fontFamily: "var(--font-serif)" }}
+                >
                   LOFT CINEMA
                 </span>
               </div>
               <p className="text-white/40 text-sm leading-relaxed">
-                Лофт-пространство для незабываемых вечеров.<br />Karaoke · Cinema · Lounge
+                Лофт-пространство для незабываемых вечеров.
+                <br />
+                Karaoke · Cinema · Lounge
               </p>
             </div>
             <div>
@@ -297,7 +309,7 @@ export default function Index() {
         </div>
       </footer>
 
-      <BookingModal isOpen={isBookingOpen} onClose={() => setIsBookingOpen(false)} hallName={bookingHall} />
+      <BookingModal isOpen={isBookingOpen} onClose={() => setIsBookingOpen(false)} />
     </div>
   )
 }
