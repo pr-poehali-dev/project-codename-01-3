@@ -79,87 +79,91 @@ const SmoothScrollHero: React.FC<SmoothScrollHeroProps> = ({
         {/* CTA Overlay */}
         <motion.div
           className="absolute inset-0 flex items-center justify-center z-20"
-          style={{
-            opacity: ctaOpacity,
-            y: ctaY,
-          }}
+          style={{ opacity: ctaOpacity, y: ctaY }}
         >
           <div className="text-center text-white max-w-4xl mx-auto px-6">
-            {/* Main CTA Heading */}
-            <h2 className="text-4xl md:text-6xl lg:text-7xl font-black tracking-wider mb-6 leading-none">
-              ГОТОВ
+            <p className="text-xs font-semibold tracking-[0.4em] uppercase mb-4" style={{ color: "hsl(345,65%,60%)" }}>
+              Ваш вечер начинается здесь
+            </p>
+            <h2
+              className="text-4xl md:text-6xl lg:text-7xl font-black tracking-wider mb-6 leading-none"
+              style={{ fontFamily: "var(--font-serif)" }}
+            >
+              ЗАБРОНИРУЙТЕ
               <br />
-              <span className="bg-gradient-to-r from-white via-gray-200 to-white bg-clip-text text-transparent">
-                БЕЖАТЬ С НАМИ?
+              <span style={{ background: "linear-gradient(135deg, hsl(345,65%,65%) 0%, hsl(38,75%,65%) 50%, hsl(345,65%,65%) 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>
+                ВАШ ЗАЛ
               </span>
             </h2>
 
-            {/* Supporting Text */}
-            <p className="text-lg md:text-xl lg:text-2xl text-gray-200 mb-8 leading-relaxed font-medium">
-              Присоединяйся к тысячам бегунов по всему миру, которые нашли свою команду,
-              <br className="hidden md:block" />
-              раздвинули границы возможного и открыли свой истинный потенциал.
+            <p className="text-lg md:text-xl text-white/70 mb-10 leading-relaxed font-medium max-w-2xl mx-auto">
+              Оставьте номер телефона — мы перезвоним и подберём идеальный зал под ваш вечер.
             </p>
 
-            {/* Stats Grid */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-12">
               <div className="text-center">
                 <div className="flex justify-center mb-2">
-                  <div className="w-10 h-10 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center">
-                    <Users className="w-5 h-5 text-white" />
+                  <div className="w-10 h-10 backdrop-blur-sm rounded-full flex items-center justify-center" style={{ background: "hsl(345,60%,30% / 0.4)" }}>
+                    <MapPin className="w-5 h-5" style={{ color: "hsl(345,65%,65%)" }} />
                   </div>
                 </div>
-                <div className="text-2xl md:text-3xl font-black text-white mb-1">50 000+</div>
-                <div className="text-xs md:text-sm text-gray-300 font-medium">Бегунов</div>
+                <div className="text-2xl md:text-3xl font-black text-white mb-1">8</div>
+                <div className="text-xs text-white/50 font-medium">Уникальных залов</div>
               </div>
-
               <div className="text-center">
                 <div className="flex justify-center mb-2">
-                  <div className="w-10 h-10 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center">
-                    <MapPin className="w-5 h-5 text-white" />
+                  <div className="w-10 h-10 backdrop-blur-sm rounded-full flex items-center justify-center" style={{ background: "hsl(345,60%,30% / 0.4)" }}>
+                    <Users className="w-5 h-5" style={{ color: "hsl(345,65%,65%)" }} />
                   </div>
                 </div>
-                <div className="text-2xl md:text-3xl font-black text-white mb-1">120+</div>
-                <div className="text-xs md:text-sm text-gray-300 font-medium">Городов мира</div>
+                <div className="text-2xl md:text-3xl font-black text-white mb-1">6–20</div>
+                <div className="text-xs text-white/50 font-medium">Гостей в зале</div>
               </div>
-
               <div className="text-center">
                 <div className="flex justify-center mb-2">
-                  <div className="w-10 h-10 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center">
-                    <Calendar className="w-5 h-5 text-white" />
+                  <div className="w-10 h-10 backdrop-blur-sm rounded-full flex items-center justify-center" style={{ background: "hsl(345,60%,30% / 0.4)" }}>
+                    <Calendar className="w-5 h-5" style={{ color: "hsl(345,65%,65%)" }} />
                   </div>
                 </div>
                 <div className="text-2xl md:text-3xl font-black text-white mb-1">365</div>
-                <div className="text-xs md:text-sm text-gray-300 font-medium">Дней в году</div>
+                <div className="text-xs text-white/50 font-medium">Дней в году</div>
               </div>
-
               <div className="text-center">
                 <div className="flex justify-center mb-2">
-                  <div className="w-10 h-10 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center">
-                    <Trophy className="w-5 h-5 text-white" />
+                  <div className="w-10 h-10 backdrop-blur-sm rounded-full flex items-center justify-center" style={{ background: "hsl(345,60%,30% / 0.4)" }}>
+                    <Trophy className="w-5 h-5" style={{ color: "hsl(345,65%,65%)" }} />
                   </div>
                 </div>
-                <div className="text-2xl md:text-3xl font-black text-white mb-1">10 000+</div>
-                <div className="text-xs md:text-sm text-gray-300 font-medium">Целей достигнуто</div>
+                <div className="text-2xl md:text-3xl font-black text-white mb-1">1000+</div>
+                <div className="text-xs text-white/50 font-medium">Счастливых гостей</div>
               </div>
             </div>
 
-            {/* CTA Button */}
-            <LiquidButton
-              size="xxl"
-              className="font-bold text-xl tracking-wide px-12 py-4 bg-gray-900 hover:bg-gray-800 text-white border-2 border-gray-900 hover:scale-105 transition-all duration-300"
+            <button
+              onClick={() => {
+                const el = document.getElementById("booking-btn")
+                if (el) el.click()
+              }}
+              className="font-bold text-base tracking-widest px-12 py-4 rounded-sm uppercase transition-all duration-300"
+              style={{
+                background: "linear-gradient(135deg, hsl(345,60%,38%) 0%, hsl(345,70%,25%) 100%)",
+                border: "1px solid hsl(345,55%,50% / 0.5)",
+                boxShadow: "0 0 30px hsl(345,60%,30% / 0.5)",
+                color: "white"
+              }}
             >
-              ВСТУПИТЬ В STRIDE
-            </LiquidButton>
+              Забронировать сейчас
+            </button>
 
-            {/* Trust Indicators */}
-            <div className="mt-12 pt-6 border-t border-white/20">
-              <p className="text-xs text-gray-400 mb-3 font-medium">НАМ ДОВЕРЯЮТ БЕГУНЫ ПО ВСЕМУ МИРУ</p>
-              <div className="flex flex-wrap justify-center items-center gap-4 text-gray-300">
-                <span className="text-xs font-semibold">ДЛЯ НОВИЧКОВ</span>
-                <span className="text-xs font-semibold">МИРОВОЕ СООБЩЕСТВО</span>
-                <span className="text-xs font-semibold">ПРОВЕРЕННЫЕ РЕЗУЛЬТАТЫ</span>
-                <span className="text-xs font-semibold">БЕСПЛАТНО</span>
+            <div className="mt-10 pt-6" style={{ borderTop: "1px solid hsl(345,30%,25% / 0.4)" }}>
+              <div className="flex flex-wrap justify-center items-center gap-6 text-white/40 text-xs font-semibold tracking-wider">
+                <span>KARAOKE</span>
+                <span style={{ color: "hsl(345,50%,45%)" }}>✦</span>
+                <span>CINEMA</span>
+                <span style={{ color: "hsl(345,50%,45%)" }}>✦</span>
+                <span>LOUNGE</span>
+                <span style={{ color: "hsl(345,50%,45%)" }}>✦</span>
+                <span>LOFT</span>
               </div>
             </div>
           </div>
